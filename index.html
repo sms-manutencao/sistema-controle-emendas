@@ -80,6 +80,25 @@
   </div>
 </div>
 
+
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyA55gBMz1lPFDKSnwx1txAY1qyOfedhMS0",
+  authDomain: "sistema-de-emendas.firebaseapp.com",
+  projectId: "sistema-de-emendas",
+  storageBucket: "sistema-de-emendas.firebasestorage.app",
+  messagingSenderId: "278964298113",
+  appId: "1:278964298113:web:ecb77dcf69fe19e26fc880",
+  measurementId: "G-NG4YDWM7M9"
+};
+
+firebase.initializeApp(firebaseConfig);
+const firestoreDB = firebase.firestore();
+const firestoreDocRef = firestoreDB.collection("sistema").doc("emendas");
+</script>
+
 <script>
 const KEY='emendas_campos_completos_v1';let estado={selecionadaId:null,emendas:[]};
 function id(){return crypto.randomUUID?crypto.randomUUID():'id_'+Date.now()+Math.random()}
@@ -112,8 +131,79 @@ function totalItem(i){i.valorItem=num(i.quantidade)*num(i.valorUnitario);return 
 function valorContrapartidaItem(i){return num(i.valorContrapartida||0)}
 function valorEmendaItem(i){let v=totalItem(i)-valorContrapartidaItem(i);return v<0?0:v}
 function calc(e){let total=num(e.valorTotal),itens=0,nf=0,contrapartida=0,emendaItens=0;e.itens.forEach(i=>{let v=totalItem(i),vc=valorContrapartidaItem(i),ve=valorEmendaItem(i);itens+=v;contrapartida+=vc;emendaItens+=ve;if(String(i.notaFiscal||'').trim())nf+=ve});return{total,itens,nf,saldo:total-nf,contrapartida,emendaItens,itensNF:e.itens.filter(i=>String(i.notaFiscal||'').trim()).length}}
-function save(){localStorage.setItem(KEY,JSON.stringify(estado))}
-function load(){try{estado=JSON.parse(localStorage.getItem(KEY))||estado}catch{};if(!estado.emendas.length){let e=novaEstrutura();e.bloco='MAC';e.tipo='Investimento';e.portaria='3995/2024';e.numeroEmenda='37460001';e.deputado='Renata Abreu';e.proposta='12336.008000/1240-02';e.objeto='Aquisição Equipamentos UPA Rodeio e Oropó';e.codigoSmar='715';e.agencia='350-6';e.contaCorrente='071.096-5';e.vinculoEmenda='08.800.3995';e.dataDeposito='2024-10-02';e.receita=302567;e.valorTotal=302567;estado.emendas=[e];estado.selecionadaId=e.id};estado.emendas.forEach(e=>{['bloco','tipo','deputado','proposta','codigoSmar','agencia','contaCorrente','vinculoEmenda','dataDeposito'].forEach(k=>{if(e[k]===undefined)e[k]=''});['receita','rendimentosConta','saldoConta'].forEach(k=>{if(e[k]===undefined)e[k]=0});(e.itens||[]).forEach(i=>{if(i.notaFiscal===undefined)i.notaFiscal='';i.notaFiscal=String(i.notaFiscal||'');if(i.statusItem===undefined)i.statusItem='PENDENTE';});});renderAll()}
+async function save(){
+  localStorage.setItem(KEY, JSON.stringify(estado));
+  try{
+    if(typeof firestoreDocRef !== "undefined"){
+      await firestoreDocRef.set({
+        estado: estado,
+        atualizadoEm: new Date().toISOString()
+      });
+    }
+  }catch(erro){
+    console.warn("Não foi possível salvar no Firestore. Salvou localmente.", erro);
+  }
+}
+async function load(){
+  let carregouDoFirestore = false;
+
+  try{
+    if(typeof firestoreDocRef !== "undefined"){
+      const snap = await firestoreDocRef.get();
+      if(snap.exists && snap.data().estado){
+        estado = snap.data().estado;
+        carregouDoFirestore = true;
+        localStorage.setItem(KEY, JSON.stringify(estado));
+      }
+    }
+  }catch(erro){
+    console.warn("Não foi possível carregar do Firestore. Tentando dados locais.", erro);
+  }
+
+  if(!carregouDoFirestore){
+    try{
+      estado = JSON.parse(localStorage.getItem(KEY)) || estado;
+    }catch{}
+  }
+
+  if(!estado.emendas || !estado.emendas.length){
+    let e = novaEstrutura();
+    e.bloco='MAC';
+    e.tipo='Investimento';
+    e.portaria='3995/2024';
+    e.numeroEmenda='37460001';
+    e.deputado='Renata Abreu';
+    e.proposta='12336.008000/1240-02';
+    e.objeto='Aquisição Equipamentos UPA Rodeio e Oropó';
+    e.codigoSmar='715';
+    e.agencia='350-6';
+    e.contaCorrente='071.096-5';
+    e.vinculoEmenda='08.800.3995';
+    e.dataDeposito='2024-10-02';
+    e.receita=302567;
+    e.valorTotal=302567;
+    estado.emendas=[e];
+    estado.selecionadaId=e.id;
+  }
+
+  estado.emendas.forEach(e=>{
+    ['bloco','tipo','deputado','proposta','codigoSmar','agencia','contaCorrente','vinculoEmenda','dataDeposito'].forEach(k=>{
+      if(e[k]===undefined)e[k]='';
+    });
+    ['receita','rendimentosConta','saldoConta'].forEach(k=>{
+      if(e[k]===undefined)e[k]=0;
+    });
+    (e.itens||[]).forEach(i=>{
+      if(i.notaFiscal===undefined)i.notaFiscal='';
+      i.notaFiscal=String(i.notaFiscal||'');
+      if(i.statusItem===undefined)i.statusItem='PENDENTE';
+      if(i.vinculoContrapartida===undefined)i.vinculoContrapartida='';
+      if(i.valorContrapartida===undefined)i.valorContrapartida=0;
+    });
+  });
+
+  renderAll();
+}
 function renderAll(){renderMetrics();renderHome();if(atual())renderDetail();renderGlobal();save()}
 function renderMetrics(){let t={q:estado.emendas.length,total:0,nf:0,saldo:0};estado.emendas.forEach(e=>{let c=calc(e);t.total+=c.total;t.nf+=c.nf;t.saldo+=c.saldo});set('mQtd',t.q);set('mTotal',brl(t.total));set('mNF',brl(t.nf));set('mSaldo',brl(t.saldo));set('sideQtd',t.q);set('sideTotal',brl(t.total));set('sideNF',brl(t.nf));set('sideSaldo',brl(t.saldo))}
 function renderHome(){let busca=val('busca'),box=document.getElementById('listaEmendas');box.innerHTML='';estado.emendas.filter(e=>has([e.bloco,e.tipo,e.numeroEmenda,e.portaria,e.deputado,e.proposta,e.objeto,e.vinculoEmenda,...e.itens.flatMap(i=>[i.descricao,i.vinculo,i.unidadeSaude,i.notaFiscal])].join(' '),busca)).forEach(e=>{let c=calc(e),div=document.createElement('div');div.className='emenda-row';div.innerHTML=`<div><div class="emenda-title">${esc(e.proposta||e.numeroEmenda||'Sem proposta')}</div><div class="small">Emenda: ${esc(e.numeroEmenda||'-')} • Deputado: ${esc(e.deputado||'-')}</div><div class="small">Portaria: ${esc(e.portaria||'-')} • Vínculo: ${esc(e.vinculoEmenda||'-')}</div><div class="small">Objeto: ${esc(e.objeto||'-')}</div></div><div><div class="small">Valor Total</div><div class="value-blue">${brl(c.total)}</div></div><div><div class="small">Executado com NF</div><div class="value-green">${brl(c.nf)}</div></div><div><div class="small">Saldo Restante</div><div class="value-orange">${brl(c.saldo)}</div></div><div><div class="small">Itens</div><b>${e.itens.length}</b></div><button class="btn-soft">Abrir Painel →</button>`;div.onclick=()=>{estado.selecionadaId=e.id;document.getElementById('detailPanel').classList.add('active');renderDetail();save();window.scrollTo({top:420,behavior:'smooth'})};box.appendChild(div)})}
