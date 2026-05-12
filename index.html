@@ -1,653 +1,78 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Controle de Emendas Parlamentares - Patrimônio</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sistema de Controle de Emendas</title>
 <style>
 :root{--bg:#f5f8fc;--side:#10284f;--side2:#173766;--blue:#2563eb;--blue2:#1d4ed8;--green:#059669;--orange:#ea580c;--red:#dc2626;--text:#0f2138;--muted:#64748b;--line:#dbe4ef;--shadow:0 10px 25px rgba(15,33,56,.08)}
-*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}.app{display:grid;grid-template-columns:280px 1fr;min-height:100vh}.sidebar{background:linear-gradient(180deg,var(--side),var(--side2));color:#fff;padding:20px;position:sticky;top:0;height:100vh}.logo{display:flex;gap:12px;align-items:center;margin-bottom:25px}.logo-icon{width:42px;height:42px;border-radius:12px;background:#2563eb;display:flex;align-items:center;justify-content:center;font-size:24px}.logo h1{font-size:18px;margin:0}.logo p{font-size:12px;margin:4px 0 0;color:#cbd5e1}.nav button{width:100%;margin:5px 0;text-align:left;background:transparent;color:white;border:0;border-radius:10px;padding:12px 14px;font-weight:700;cursor:pointer}.nav button.active,.nav button:hover{background:#2563eb}.side-summary{margin-top:30px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:16px}.side-summary p{font-size:12px;color:#cbd5e1;margin:12px 0 4px}.side-summary strong{font-size:16px}.main{padding:22px}.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;gap:12px;flex-wrap:wrap}.topbar h2{margin:0;font-size:24px}.actions{display:flex;gap:10px;flex-wrap:wrap}button{border:0;border-radius:10px;padding:11px 14px;font-weight:800;cursor:pointer;background:var(--blue);color:white}button:hover{background:var(--blue2)}.btn-soft{background:#eef4ff;color:var(--blue);border:1px solid #c7d8ff}.btn-green{background:#16a34a}.btn-red{background:#fee2e2;color:#991b1b;border:1px solid #fecaca}.btn-white{background:white;color:var(--blue);border:1px solid var(--line)}.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:18px}.card,.panel{background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:18px}.panel{padding:0;margin-bottom:18px;overflow:hidden}.metric{display:flex;gap:14px;align-items:center}.metric-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px}.mi-blue{background:#eaf1ff;color:var(--blue)}.mi-green{background:#dcfce7;color:var(--green)}.mi-purple{background:#f3e8ff;color:#7c3aed}.mi-orange{background:#ffedd5;color:var(--orange)}.metric span{display:block;color:var(--muted);font-size:12px;text-transform:uppercase;font-weight:900;margin-bottom:6px}.metric strong{font-size:20px}.panel-head{padding:18px 22px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.panel-head h3{margin:0;font-size:18px}.panel-head p{margin:6px 0 0;color:var(--muted);font-size:13px}.search-row{display:grid;grid-template-columns:1fr 220px auto;gap:12px;align-items:center}input,textarea,select{width:100%;border:1px solid var(--line);border-radius:10px;padding:11px 12px;font-size:14px;background:white;color:var(--text)}input:focus,textarea:focus,select:focus{outline:3px solid rgba(37,99,235,.12);border-color:var(--blue)}textarea{min-height:72px;resize:vertical}label{display:block;font-size:11px;color:var(--muted);text-transform:uppercase;font-weight:900;margin-bottom:6px}.table-wrap{
-  overflow:auto;
-  max-height:62vh;
-  border-bottom:1px solid var(--line);
-  scrollbar-gutter:stable both-edges;
-}
-.table-wrap::-webkit-scrollbar{height:14px;width:14px}
-.table-wrap::-webkit-scrollbar-thumb{background:#94a3b8;border-radius:999px;border:3px solid #f8fafc}
-.table-wrap::-webkit-scrollbar-track{background:#e2e8f0;border-radius:999px}table{width:100%;border-collapse:collapse;min-width:1350px}th{background:#f8fafc;color:#64748b;text-align:left;font-size:11px;text-transform:uppercase;padding:12px;border-bottom:1px solid var(--line)}td{padding:12px;border-bottom:1px solid #edf2f7;font-size:13px;vertical-align:middle}.emenda-row{display:grid;grid-template-columns:1.8fr 1fr 1fr 1fr 80px 150px;gap:12px;align-items:center;padding:18px;border:1px solid var(--line);border-radius:12px;margin:12px;background:white}.emenda-title{font-weight:900;color:#1e3a8a}.small{font-size:12px;color:var(--muted);margin-top:4px}.value-blue{color:var(--blue);font-weight:900}.value-green{color:var(--green);font-weight:900}.value-orange{color:var(--orange);font-weight:900}.badge{display:inline-flex;padding:5px 9px;border-radius:999px;font-size:12px;font-weight:900}.ok{background:#dcfce7;color:#166534}.warn{background:#fef3c7;color:#92400e}.detail{display:none}.detail.active{display:block}.tabs{display:flex;gap:8px;border-bottom:1px solid var(--line);padding:0 20px;background:white}.tab{background:white;color:#64748b;border-radius:0;border-bottom:3px solid transparent}.tab.active{color:var(--blue);border-bottom-color:var(--blue)}.tab-content{display:none;padding:20px}.tab-content.active{display:block}.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}.span-4{grid-column:1/-1}.right-grid{display:grid;grid-template-columns:1fr 320px;gap:18px}.summary-box p{display:flex;justify-content:space-between;border-bottom:1px solid var(--line);padding:10px 0;margin:0;color:var(--muted)}.summary-box strong{color:var(--text)}.empty{text-align:center;color:var(--muted);padding:35px}.hidden{display:none}.report-doc{background:white;border:1px solid var(--line);border-radius:14px;padding:22px}
-.report-section-title{background:#eaf1ff;color:#1e3a8a;font-weight:900;padding:10px 12px;border-radius:10px;margin:18px 0 10px;text-transform:uppercase}
-.report-info-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:10px}
-.report-info-grid div{background:#f8fafc;border:1px solid var(--line);border-radius:10px;padding:10px}
-.report-info-grid span{display:block;font-size:11px;color:var(--muted);font-weight:900;text-transform:uppercase;margin-bottom:4px}
-.report-info-grid b{font-size:13px}
-.report-object{border:1px solid var(--line);border-radius:10px;padding:12px;background:#fff;line-height:1.45}
-.report-finance-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:10px 0}
-.report-finance-grid div{background:#f8fafc;border:1px solid var(--line);border-radius:10px;padding:10px}
-.report-finance-grid span{display:block;font-size:11px;color:var(--muted);font-weight:900;text-transform:uppercase;margin-bottom:4px}
-.report-finance-grid b{font-size:14px}
-.report-head{border-bottom:2px solid #dbeafe;padding-bottom:12px;margin-bottom:14px}.report-head h2{margin:0;color:#1e3a8a}.report-head p{color:var(--muted);margin:6px 0 0}.report-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:16px 0}.report-summary div{background:#f8fafc;border:1px solid var(--line);border-radius:12px;padding:12px}.report-summary span{display:block;color:var(--muted);font-size:11px;text-transform:uppercase;font-weight:900;margin-bottom:5px}.req-block{border:1px solid #dbeafe;border-radius:14px;overflow:hidden;margin-top:16px}.req-head{background:#eff6ff;display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:12px}.req-head span{display:block;color:var(--muted);font-size:11px;text-transform:uppercase;font-weight:900}
-.modal-backdrop{position:fixed;inset:0;background:rgba(15,33,56,.55);display:none;align-items:center;justify-content:center;z-index:9999;padding:20px;overflow:hidden}
-.modal-backdrop.active{display:flex}
-.modal{background:white;border-radius:18px;box-shadow:0 25px 70px rgba(0,0,0,.25);width:min(1100px,96vw);max-height:92vh;overflow:auto;border:1px solid var(--line);position:relative}
-.modal-header{padding:18px 22px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:12px;background:linear-gradient(135deg,#1d4ed8,#0f3b78);color:white;border-radius:18px 18px 0 0;cursor:move;user-select:none}
-.modal-header h3{margin:0;font-size:20px}.modal-header button{cursor:pointer}.modal-header p{margin:4px 0 0;color:#dbeafe;font-size:13px}
-.modal-body{padding:20px}.modal-footer{padding:16px 20px;border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:10px;background:#f8fafc;border-radius:0 0 18px 18px}
-.modal-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.modal-grid .span-3{grid-column:1/-1}
-.table-actions{display:flex;gap:8px;flex-wrap:wrap}.col-nf,.col-af{min-width:110px;white-space:nowrap;font-weight:700;color:#0f2138}.col-status{min-width:105px;white-space:nowrap}.pat-list{display:flex;flex-wrap:wrap;gap:6px}.pat-chip{background:#eaf1ff;color:#1e3a8a;border:1px solid #c7d8ff;border-radius:999px;padding:4px 8px;font-size:12px;font-weight:800}.pat-alert{background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;border-radius:12px;padding:10px;margin:10px 0;font-weight:700}
-@media(max-width:900px){.modal-grid{grid-template-columns:1fr}.modal-grid .span-3{grid-column:span 1}}
-
-@media print{body{background:white!important}.sidebar,.topbar,.cards,#homeSection>.panel:first-child,.tabs,.actions,.summary-box,.card:not(.print-keep){display:none!important}.app{display:block!important}.main{padding:0!important}#homeSection,#detailPanel,.detail,.right-grid,.panel,#tab-relatorio,.tab-content{display:block!important}#tab-dados,#tab-itens,#globalSection{display:none!important}.right-grid{grid-template-columns:1fr!important}.panel{border:0!important;box-shadow:none!important;margin:0!important}.panel-head{display:none!important}.table-wrap{overflow:visible!important;max-height:none!important;border:0!important}table{font-size:10px!important;min-width:0!important;width:100%!important;table-layout:fixed!important}th,td{padding:5px!important;white-space:normal!important;word-break:break-word!important;overflow-wrap:anywhere!important}.report-doc{border:0!important;padding:0!important}}@media(max-width:1100px){.app{grid-template-columns:1fr}.sidebar{position:relative;height:auto}.cards,.right-grid,.report-summary,.req-head{grid-template-columns:1fr}.search-row,.emenda-row{grid-template-columns:1fr}}
-</style></head>
-<body><div class="app"><aside class="sidebar"><div class="logo"><div class="logo-icon">🏛️</div><div><h1>Emendas</h1><p>Controle de Emendas Parlamentares</p></div></div><div class="nav"><button class="active" onclick="showSection('home',this)">▦ Painel Principal</button><button onclick="showSection('home',this)">▤ Minhas Emendas</button><button onclick="showSection('global',this)">▧ Relatórios Gerais</button><button onclick="showSection('global',this)">◎ Unidades de Saúde</button><button onclick="showSection('global',this)">⚙ Vínculos</button></div><div class="side-summary"><h3>Resumo Geral</h3><p>Total de Emendas</p><strong id="sideQtd">0</strong><p>Valor Total</p><strong id="sideTotal">R$ 0,00</strong><p>Total Executado com NF</p><strong id="sideNF">R$ 0,00</strong><p>Saldo Total</p><strong id="sideSaldo" style="color:#86efac">R$ 0,00</strong></div></aside>
-<main class="main"><div class="topbar"><h2>Painel Principal</h2><div class="actions"><button class="btn-white" onclick="showSection('global')">⚱ Filtros Globais</button><button onclick="novaEmenda()">+ Nova Emenda</button><button class="btn-soft" onclick="salvarBackup()">Backup</button><button class="btn-soft" onclick="document.getElementById('arquivoJson').click()">Importar</button><input id="arquivoJson" class="hidden" type="file" accept="application/json" onchange="importarBackup(event)"></div></div>
-<section class="cards"><div class="card metric"><div class="metric-icon mi-blue">🏛️</div><div><span>Total de emendas</span><strong id="mQtd">0</strong><div class="small">Cadastradas</div></div></div><div class="card metric"><div class="metric-icon mi-green">💵</div><div><span>Valor total das emendas</span><strong id="mTotal">R$ 0,00</strong><div class="small">Valor global</div></div></div><div class="card metric"><div class="metric-icon mi-purple">💼</div><div><span>Executado com NF</span><strong id="mNF">R$ 0,00</strong><div class="small">Valor total com NF</div></div></div><div class="card metric"><div class="metric-icon mi-orange">◔</div><div><span>Saldo restante</span><strong id="mSaldo">R$ 0,00</strong><div class="small">Valor ainda disponível</div></div></div></section>
-<section id="homeSection"><div class="panel"><div class="panel-head"><div><h3>Minhas Emendas</h3><p>Clique em uma emenda para abrir o painel detalhado.</p></div><div class="search-row"><input id="busca" placeholder="Buscar emendas..." oninput="renderHome()"><select><option>Ordenar: Mais recente</option></select><button class="btn-soft" onclick="renderHome()">☰</button></div></div><div id="listaEmendas" style="padding:8px 12px 20px"></div></div>
-<div id="detailPanel" class="detail"><div class="right-grid"><div class="panel"><div class="panel-head" style="background:linear-gradient(135deg,#1d4ed8,#0f3b78);color:white"><div><h3 id="detTitulo">Painel da Emenda</h3><p id="detSub" style="color:#dbeafe"></p></div><div class="actions"><button class="btn-white" onclick="abrirRelatorio()">📄 Gerar Relatório</button><button class="btn-white" onclick="imprimirRelatorio()">🖨️ Imprimir</button><button class="btn-red" onclick="excluirEmenda()">Excluir Emenda</button></div></div><div class="tabs"><button class="tab active" onclick="openTab('dados',this)">Dados da Emenda</button><button class="tab" onclick="openTab('itens',this)">Itens e Compras</button><button class="tab" onclick="openTab('relatorio',this)">Relatório</button><button class="tab" onclick="openTab('patrimonio',this)">Patrimônio</button></div>
-<div id="tab-dados" class="tab-content active"><div class="form-grid">
-<div><label>Bloco</label><input id="bloco" oninput="updateEmenda('bloco',this.value)" placeholder="Ex.: MAC"></div><div><label>Tipo</label><input id="tipo" oninput="updateEmenda('tipo',this.value)" placeholder="Investimento"></div><div><label>Portaria</label><input id="portaria" oninput="updateEmenda('portaria',this.value)" placeholder="3995/2024"></div><div><label>Emenda</label><input id="numeroEmenda" oninput="updateEmenda('numeroEmenda',this.value)" placeholder="37460001"></div>
-<div><label>Deputado</label><input id="deputado" oninput="updateEmenda('deputado',this.value)" placeholder="Deputado"></div><div><label>Proposta</label><input id="proposta" oninput="updateEmenda('proposta',this.value)" placeholder="12336.008000/1240-02"></div><div><label>Código SMAR</label><input id="codigoSmar" oninput="updateEmenda('codigoSmar',this.value)" placeholder="715"></div><div><label>Vínculo</label><input id="vinculoEmenda" oninput="updateEmenda('vinculoEmenda',this.value)" placeholder="08.800.3995"></div>
-<div><label>Agência</label><input id="agencia" oninput="updateEmenda('agencia',this.value)" placeholder="350-6"></div><div><label>Conta Corrente</label><input id="contaCorrente" oninput="updateEmenda('contaCorrente',this.value)" placeholder="071.096-5"></div><div><label>Data do Depósito</label><input id="dataDeposito" type="date" oninput="updateEmenda('dataDeposito',this.value)"></div><div><label>Receita</label><input id="receita" oninput="updateMoney('receita',this.value)" onblur="this.value=formatMoneyInput(this.value)" placeholder="R$ 0,00"></div>
-<div><label>Valor Total da Emenda</label><input id="valorTotal" oninput="updateEmendaValor(this.value)" onblur="this.value=formatMoneyInput(this.value)" placeholder="R$ 0,00"></div><div><label>Saldo da Emenda</label><input id="saldoEmendaAuto" readonly></div><div><label>Rendimentos da Conta Corrente</label><input id="rendimentosConta" oninput="updateMoney('rendimentosConta',this.value)" onblur="this.value=formatMoneyInput(this.value)" placeholder="R$ 0,00"></div><div><label>Saldo na Conta Corrente</label><input id="saldoConta" oninput="updateMoney('saldoConta',this.value)" onblur="this.value=formatMoneyInput(this.value)" placeholder="R$ 0,00"></div>
-<div><label>Quantidade de itens</label><input id="qtdItens" readonly></div><div class="span-4"><label>Objeto</label><textarea id="objeto" oninput="updateEmenda('objeto',this.value)" placeholder="Objeto da emenda"></textarea></div><div class="span-4"><label>Observações / Dados da compra</label><textarea id="observacoes" oninput="updateEmenda('observacoes',this.value)" placeholder="Dados da compra, observações ou anotações internas"></textarea></div>
-</div></div>
-<div id="tab-itens" class="tab-content"><div class="panel-head" style="box-shadow:none;border:0;padding:0 0 14px"><div><h3>Itens, Compras e Execução</h3><p>O saldo só baixa quando o status do item estiver como ADQUIRIDO.</p></div><button class="btn-green" onclick="adicionarItem()">+ Adicionar Item</button></div><div class="table-wrap"><table><thead><tr><th>Código</th><th>Descrição</th><th>Req. Nº / Ano</th><th>Unid. Saúde</th><th>Vínculo</th><th>Qtd.</th><th>Valor Unit.</th><th>Valor Total</th><th>Vínculo Contrapartida</th><th>Valor Contrapartida</th><th>Valor da Emenda</th><th class="col-af">AF</th><th class="col-nf">NF</th><th class="col-status">Status</th><th>Ações</th></tr></thead><tbody id="tbodyItens"></tbody></table></div></div><div id="tab-relatorio" class="tab-content"><div id="relatorio"></div></div>
-<div id="tab-patrimonio" class="tab-content">
-  <div class="panel-head" style="box-shadow:none;border:0;padding:0 0 14px">
-    <div><h3>Controle de Patrimônio</h3><p>Vincule os números de patrimônio aos itens adquiridos, com AF, NF e unidade de destino.</p></div>
-  </div>
-  <div class="pat-alert">Itens com status ADQUIRIDO devem ser acompanhados até a patrimoniação total.</div>
-  <div class="table-wrap">
-    <table>
-      <thead><tr><th>Código</th><th>Item</th><th>Unidade</th><th>AF</th><th>NF</th><th>Qtd. Comprada</th><th>Qtd. Patrimoniada</th><th>Faltam</th><th>Situação</th><th>Números de Patrimônio</th><th>Ações</th></tr></thead>
-      <tbody id="tbodyPatrimonio"></tbody>
-    </table>
-  </div>
-</div></div><aside><div class="card summary-box"><h3>Resumo Financeiro da Emenda</h3><p>Valor Total da Emenda <strong id="sTotal">R$ 0,00</strong></p><p>Executado com NF <strong id="sNF">R$ 0,00</strong></p><p>Saldo Restante <strong id="sSaldo">R$ 0,00</strong></p><p>Total de Itens <strong id="sItens">0</strong></p><p>Itens com NF <strong id="sItensNF">0</strong></p><p>Contrapartida Inserida <strong id="sContra">R$ 0,00</strong></p></div><div class="card" style="margin-top:14px"><h3>Legenda</h3><p class="small">🔵 Valor total: quantidade × valor unitário.</p><p class="small">🟢 Apenas itens com status ADQUIRIDO abatem o saldo.</p><p class="small">🟠 Itens PENDENTES, EM ENTREGA, PARCIAIS ou CANCELADOS não reduzem o saldo.</p><p class="small">🟣 Contrapartida é somada separadamente e não consome saldo da emenda.</p></div></aside></div></div></section>
-<section id="globalSection" class="hidden"><div class="panel"><div class="panel-head"><div><h3>Relatórios Gerais</h3><p>Filtros globais de todas as emendas.</p></div><button class="btn-soft" onclick="exportarCSV(todasCompras(),'relatorio_global.csv')">Exportar Excel (CSV)</button></div><div style="padding:18px" class="form-grid"><div><label>Vínculo</label><input id="gVinculo" oninput="renderGlobal()"></div><div><label>Unidade de Saúde</label><input id="gUnidade" oninput="renderGlobal()"></div><div><label>Emenda/Portaria</label><input id="gEmenda" oninput="renderGlobal()"></div><div><label>Objeto / Item / Código</label><input id="gObjeto" oninput="renderGlobal()" placeholder="Buscar por objeto, item ou código"></div><div><label>Situação NF</label><select id="gNF" onchange="renderGlobal()"><option value="">Todas</option><option value="com">Com NF</option><option value="sem">Sem NF</option></select></div><div><label>AF</label><input id="gAF" oninput="renderGlobal()" placeholder="Pesquisar AF"></div><div><label>NF</label><input id="gBuscaNF" oninput="renderGlobal()" placeholder="Pesquisar NF"></div><div><label>Patrimônio</label><input id="gPatrimonio" oninput="renderGlobal()" placeholder="Pesquisar patrimônio"></div></div><div class="table-wrap"><table><thead><tr><th>Emenda</th><th>Portaria</th><th>Item</th><th>Unidade</th><th>Vínculo</th><th>Qtd.</th><th>Unit.</th><th>Total</th><th>Contrapartida</th><th>Valor Emenda</th><th>AF</th><th>NF</th><th>Patrimônio</th></tr></thead><tbody id="tbodyGlobal"></tbody></table></div></div></section></main></div>
-
-<div id="itemModal" class="modal-backdrop">
-  <div id="itemModalBox" class="modal">
-    <div id="itemModalHeader" class="modal-header">
-      <div>
-        <h3 id="modalTitulo">Cadastrar Item</h3>
-        <p>Preencha os dados do item, requisição, AF, NF, vínculo e contrapartida.</p>
-      </div>
-      <button class="btn-white" onclick="fecharModalItem()">Fechar</button>
-    </div>
-    <div class="modal-body">
-      <input type="hidden" id="modalItemId">
-      <div class="modal-grid">
-        <div><label>Código do Item</label><input id="mCodigoItem" placeholder="Código do item"></div>
-        <div class="span-3"><label>Descrição do Item</label><input id="mDescricao" placeholder="Descrição completa do item"></div>
-        <div><label>Requisição Nº</label><input id="mReqNumero" placeholder="Número da requisição"></div>
-        <div><label>Ano da Requisição</label><input id="mReqAno" placeholder="Ano"></div>
-        <div><label>Unidade de Saúde</label><input id="mUnidadeSaude" placeholder="Destino do item"></div>
-        <div><label>Vínculo do Item</label><input id="mVinculo" placeholder="Vínculo utilizado na compra"></div>
-        <div><label>Quantidade</label><input id="mQuantidade" placeholder="Quantidade"></div>
-        <div><label>Valor Unitário</label><input id="mValorUnitario" placeholder="Digite 3756,66" oninput="atualizarPreviewModal(false)" onblur="this.value=formatMoneyInput(this.value);atualizarPreviewModal(false)"><div class="small">Digite normal. Ex.: 3756,66</div></div>
-        <div><label>Valor Total do Item</label><input id="mValorTotal" readonly></div>
-        <div><label>Vínculo de Contrapartida</label><input id="mVinculoContrapartida" placeholder="Vínculo de contrapartida, se houver"></div>
-        <div><label>Valor da Contrapartida</label><input id="mValorContrapartida" placeholder="Digite 0,00" oninput="atualizarPreviewModal(false)" onblur="this.value=formatMoneyInput(this.value);atualizarPreviewModal(false)"><div class="small">Deixe 0 se não houver.</div></div>
-        <div><label>Valor da Emenda no Item</label><input id="mValorEmenda" readonly></div>
-        <div><label>Autorização de Fornecimento - AF</label><input id="mAF" placeholder="Número da AF"></div>
-        <div><label>Nota Fiscal - NF</label><input id="mNotaFiscal" name="notaFiscal" autocomplete="off" placeholder="Número da NF" oninput="atualizarPreviewModal(false)" onchange="atualizarPreviewModal(false)" onkeyup="atualizarPreviewModal(false)"></div>
-        <div><label>Status do Item</label><select id="mStatus"><option value="PENDENTE">PENDENTE</option><option value="ADQUIRIDO">ADQUIRIDO</option><option value="EM ENTREGA">EM ENTREGA</option><option value="PARCIAL">PARCIAL</option><option value="CANCELADO">CANCELADO</option></select></div>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn-soft" onclick="fecharModalItem()">Cancelar</button>
-      <button class="btn-green" onclick="salvarItemModal()">Salvar Item</button>
-    </div>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}.app{display:grid;grid-template-columns:280px 1fr;min-height:100vh}.sidebar{background:linear-gradient(180deg,var(--side),var(--side2));color:white;padding:20px;position:sticky;top:0;height:100vh}.logo{display:flex;gap:12px;align-items:center;margin-bottom:25px}.logo-icon{width:42px;height:42px;border-radius:12px;background:var(--blue);display:flex;align-items:center;justify-content:center;font-size:24px}.logo h1{font-size:18px;margin:0}.logo p{font-size:12px;margin:4px 0 0;color:#cbd5e1}.nav button{width:100%;margin:5px 0;text-align:left;background:transparent;color:white;border:0;border-radius:10px;padding:12px 14px;font-weight:700;cursor:pointer}.nav button.active,.nav button:hover{background:var(--blue)}.side-summary{margin-top:30px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:16px}.side-summary p{font-size:12px;color:#cbd5e1;margin:12px 0 4px}.side-summary strong{font-size:16px}.main{padding:22px}.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;gap:12px}.topbar h2{margin:0;font-size:24px}.actions{display:flex;gap:10px;flex-wrap:wrap}button{border:0;border-radius:10px;padding:11px 14px;font-weight:800;cursor:pointer;background:var(--blue);color:white}button:hover{background:var(--blue2)}.btn-soft{background:#eef4ff;color:var(--blue);border:1px solid #c7d8ff}.btn-green{background:#16a34a}.btn-red{background:#fee2e2;color:#991b1b;border:1px solid #fecaca}.btn-white{background:white;color:var(--blue);border:1px solid var(--line)}.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:18px}.card,.panel{background:white;border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:18px}.panel{padding:0;margin-bottom:18px;overflow:hidden}.metric span{display:block;color:var(--muted);font-size:12px;text-transform:uppercase;font-weight:900;margin-bottom:6px}.metric strong{font-size:20px}.panel-head{padding:18px 22px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.panel-head h3{margin:0;font-size:18px}.panel-head p{margin:6px 0 0;color:var(--muted);font-size:13px}.detail-head{background:linear-gradient(135deg,#1d4ed8,#0f3b78);color:white}.detail-head p{color:#dbeafe}.tabs{display:flex;gap:8px;border-bottom:1px solid var(--line);padding:0 20px;background:white}.tab{background:white;color:#64748b;border-radius:0;border-bottom:3px solid transparent}.tab.active{color:var(--blue);border-bottom-color:var(--blue)}.tab-content{display:none;padding:20px}.tab-content.active{display:block}.form-grid{display:grid;grid-template-columns:repeat(4,minmax(180px,1fr));gap:14px}.span-4{grid-column:1/-1}label{display:block;font-size:11px;color:var(--muted);text-transform:uppercase;font-weight:900;margin-bottom:6px}input,textarea,select{width:100%;border:1px solid var(--line);border-radius:10px;padding:11px 12px;font-size:14px;background:white;color:var(--text)}textarea{min-height:64px}.table-wrap{overflow:auto;max-height:48vh;border-bottom:1px solid var(--line);scrollbar-gutter:stable both-edges}.table-wrap::-webkit-scrollbar{height:14px;width:14px}.table-wrap::-webkit-scrollbar-thumb{background:#94a3b8;border-radius:999px;border:3px solid #f8fafc}.table-wrap::-webkit-scrollbar-track{background:#e2e8f0;border-radius:999px}table{width:100%;border-collapse:collapse;min-width:1350px}th{background:#f8fafc;color:#64748b;text-align:left;font-size:11px;text-transform:uppercase;padding:12px;border-bottom:1px solid var(--line)}td{padding:12px;border-bottom:1px solid #edf2f7;font-size:13px;vertical-align:middle}.right-grid{display:grid;grid-template-columns:1fr 320px;gap:18px}.summary-box p{display:flex;justify-content:space-between;border-bottom:1px solid var(--line);padding:10px 0;margin:0;color:var(--muted)}.summary-box strong{color:var(--text)}.badge{display:inline-flex;padding:5px 9px;border-radius:999px;font-size:12px;font-weight:900}.ok{background:#dcfce7;color:#166534}.warn{background:#fef3c7;color:#92400e}.pat-chip{background:#eaf1ff;color:#1e3a8a;border:1px solid #c7d8ff;border-radius:999px;padding:4px 8px;font-size:12px;font-weight:800;display:inline-block;margin:2px}.pat-alert{background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;border-radius:12px;padding:10px;margin:10px 0 14px;font-weight:700}.empty{text-align:center;color:var(--muted);padding:28px}.hidden{display:none}.emenda-row{display:grid;grid-template-columns:1.8fr 1fr 1fr 1fr 90px 150px;gap:12px;align-items:center;padding:18px;border:1px solid var(--line);border-radius:12px;margin:12px;background:white}.emenda-title{font-weight:900;color:#1e3a8a}.small{font-size:12px;color:var(--muted);margin-top:4px}.value-blue{color:var(--blue);font-weight:900}.value-green{color:var(--green);font-weight:900}.value-orange{color:var(--orange);font-weight:900}.login-backdrop{position:fixed;inset:0;background:linear-gradient(135deg,#10284f,#173766);display:flex;align-items:center;justify-content:center;z-index:99999;padding:20px}.login-box{width:min(420px,92vw);background:white;border-radius:20px;box-shadow:0 30px 80px rgba(0,0,0,.35);padding:28px;border:1px solid var(--line)}.login-box h2{margin:0 0 8px;color:#10284f}.login-box p{margin:0 0 18px;color:var(--muted)}.login-error{display:none;background:#fee2e2;color:#991b1b;border:1px solid #fecaca;border-radius:10px;padding:10px;margin-top:10px;font-weight:800}.login-error.active{display:block}.modal-backdrop{position:fixed;inset:0;background:rgba(15,33,56,.55);display:none;align-items:center;justify-content:center;z-index:9999;padding:20px}.modal-backdrop.active{display:flex}.modal{background:white;border-radius:18px;box-shadow:0 25px 70px rgba(0,0,0,.25);width:min(460px,96vw);border:1px solid var(--line);overflow:hidden}.modal-header{padding:18px 22px;background:linear-gradient(135deg,#1d4ed8,#0f3b78);color:white}.modal-header h3{margin:0}.modal-body{padding:20px}.modal-footer{padding:16px 20px;border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:10px;background:#f8fafc}@media(max-width:1100px){.app,.right-grid,.cards,.form-grid,.emenda-row{grid-template-columns:1fr}.span-4{grid-column:auto}.sidebar{position:relative;height:auto}}
+</style>
+</head>
+<body>
+<div id="loginSistema" class="login-backdrop">
+  <div class="login-box">
+    <h2>🔒 Acesso ao Sistema</h2>
+    <p>Digite a senha para entrar no Sistema de Controle de Emendas.</p>
+    <label>Senha de acesso</label>
+    <input id="senhaEntrada" type="password" placeholder="Digite a senha" onkeydown="if(event.key==='Enter')entrarSistema()">
+    <button style="width:100%;margin-top:14px" onclick="entrarSistema()">Entrar</button>
+    <div id="erroLogin" class="login-error">Senha incorreta.</div>
   </div>
 </div>
-
-<div id="patrimonioModal" class="modal-backdrop">
-  <div id="patrimonioModalBox" class="modal">
-    <div id="patrimonioModalHeader" class="modal-header">
-      <div><h3>Cadastrar Patrimônio</h3><p>Informe os números de patrimônio vinculados ao item comprado.</p></div>
-      <button class="btn-white" onclick="fecharModalPatrimonio()">Fechar</button>
-    </div>
+<div id="modalExcluir" class="modal-backdrop">
+  <div class="modal">
+    <div class="modal-header"><h3>Confirmar exclusão</h3></div>
     <div class="modal-body">
-      <input type="hidden" id="patItemId">
-      <div class="modal-grid">
-        <div class="span-3"><label>Item</label><input id="patItemDescricao" readonly></div>
-        <div><label>AF</label><input id="patAF" readonly></div>
-        <div><label>Nota Fiscal</label><input id="patNF" readonly></div>
-        <div><label>Unidade de Saúde</label><input id="patUnidade" readonly></div>
-        <div><label>Quantidade Comprada</label><input id="patQtdComprada" readonly></div>
-        <div><label>Quantidade Patrimoniada</label><input id="patQtdPatrimoniada" readonly></div>
-        <div class="span-3"><label>Números de Patrimônio</label><textarea id="patNumeros" placeholder="Digite um patrimônio por linha ou separe por vírgula. Ex.: 12345, 12346, 12347"></textarea><div class="small">O sistema conta automaticamente a quantidade de patrimônios informados.</div></div>
-        <div class="span-3"><label>Observações do Patrimônio</label><textarea id="patObservacoes" placeholder="Observações internas sobre tombamento, etiqueta, pendências etc."></textarea></div>
-      </div>
+      <p>Para excluir esta emenda, digite a senha de confirmação.</p>
+      <label>Senha de exclusão</label>
+      <input id="senhaExclusao" type="password" placeholder="Digite a senha" onkeydown="if(event.key==='Enter')executarExclusao()">
+      <div id="erroExclusao" class="login-error">Senha incorreta. A emenda não foi excluída.</div>
     </div>
-    <div class="modal-footer">
-      <button class="btn-soft" onclick="fecharModalPatrimonio()">Cancelar</button>
-      <button class="btn-green" onclick="salvarPatrimonio()">Salvar Patrimônio</button>
-    </div>
+    <div class="modal-footer"><button class="btn-soft" onclick="fecharModalExclusao()">Cancelar</button><button class="btn-red" onclick="executarExclusao()">Excluir</button></div>
   </div>
 </div>
-
-
-<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+<div class="app">
+<aside class="sidebar"><div class="logo"><div class="logo-icon">🏛️</div><div><h1>Emendas</h1><p>Controle de Emendas Parlamentares</p></div></div><div class="nav"><button class="active" onclick="showSection('home',this)">▦ Painel Principal</button><button onclick="showSection('home',this)">▤ Minhas Emendas</button><button onclick="showSection('global',this)">▧ Relatórios Gerais</button><button onclick="showSection('global',this)">◎ Unidades de Saúde</button><button onclick="showSection('global',this)">⚙ Vínculos</button></div><div class="side-summary"><h3>Resumo Geral</h3><p>Total de Emendas</p><strong id="sideQtd">0</strong><p>Valor Total</p><strong id="sideTotal">R$ 0,00</strong><p>Total Executado com NF</p><strong id="sideNF">R$ 0,00</strong><p>Saldo Total</p><strong id="sideSaldo" style="color:#86efac">R$ 0,00</strong></div></aside>
+<main class="main"><div class="topbar"><h2 id="tituloPagina">Painel Principal</h2><div class="actions"><button class="btn-white" onclick="showSection('global')">⚱ Filtros Globais</button><button class="btn-soft" onclick="showSection('home')">Painel das Emendas</button><button>+ Nova Emenda</button><button class="btn-soft">Backup</button><button class="btn-soft">Importar</button></div></div>
+<section class="cards"><div class="card metric"><span>Total de emendas</span><strong id="mQtd">0</strong></div><div class="card metric"><span>Valor total das emendas</span><strong id="mTotal">R$ 0,00</strong></div><div class="card metric"><span>Executado com NF</span><strong id="mNF">R$ 0,00</strong></div><div class="card metric"><span>Saldo restante</span><strong id="mSaldo">R$ 0,00</strong></div></section>
+<section id="homeSection">
+<div class="panel"><div class="panel-head"><div><h3>Minhas Emendas</h3><p>Lista das emendas cadastradas. Clique em Abrir Painel para visualizar os detalhes.</p></div></div><div id="listaEmendas"></div></div>
+<div class="right-grid"><div class="panel"><div class="panel-head detail-head"><div><h3>Painel da Emenda</h3><p id="subEmenda">12336.008000/1220-04</p></div><div class="actions"><button class="btn-white">📄 Gerar Relatório</button><button class="btn-white">🖨️ Imprimir</button><button class="btn-red" onclick="abrirModalExclusao()">Excluir Emenda</button></div></div><div class="tabs"><button class="tab active" onclick="openTab('dados',this)">Dados da Emenda</button><button class="tab" onclick="openTab('itens',this)">Itens e Compras</button><button class="tab" onclick="openTab('relatorio',this)">Relatório</button><button class="tab" onclick="openTab('patrimonio',this)">Patrimônio</button></div>
+<div id="tab-dados" class="tab-content active"><div class="form-grid"><div><label>Bloco</label><input value="MAC"></div><div><label>Tipo</label><input value="Investimento"></div><div><label>Portaria</label><input value="1153/2022"></div><div><label>Emenda</label><input value="41350004"></div><div><label>Proposta</label><input value="12336.008000/1220-04"></div><div><label>Código SMAR</label><input value="632"></div><div><label>Vínculo</label><input value="08.300.5153"></div><div><label>Agência</label><input value="350-6"></div><div><label>Valor Total da Emenda</label><input id="valorTotal" value="R$ 399.736,00" oninput="recalcularDados()"></div><div><label>Executado com NF</label><input id="executadoNF" value="R$ 223.102,66" oninput="recalcularDados()"></div><div><label>Saldo da Emenda</label><input id="saldoEmenda" readonly></div><div><label>Rendimentos da Conta Corrente</label><input id="rendimentos" value="R$ 12.450,00" oninput="recalcularDados()"></div><div><label>Saldo na Conta Corrente</label><input id="saldoConta" readonly></div><div><label>Quantidade de Itens</label><input id="qtdItens" readonly></div><div class="span-4"><label>Objeto</label><textarea>Recurso de Emenda Parlamentar destinado à aquisição de equipamento e material permanente.</textarea></div></div></div>
+<div id="tab-itens" class="tab-content"><div class="panel-head" style="box-shadow:none;border:0;padding:0 0 14px"><div><h3>Itens, Compras e Execução</h3><p>A quantidade da primeira aba é a soma da coluna QTD.</p></div><button class="btn-green">+ Adicionar Item</button></div><div class="table-wrap"><table><thead><tr><th>Código</th><th>Descrição</th><th>Req. Nº/Ano</th><th>Unid. Saúde</th><th>Vínculo</th><th>Qtd.</th><th>Valor Unit.</th><th>Valor Total</th><th>AF</th><th>NF</th><th>Patrimônios</th></tr></thead><tbody id="tbodyItens"></tbody></table></div></div>
+<div id="tab-relatorio" class="tab-content"><div class="empty">Relatório situacional da emenda.</div></div>
+<div id="tab-patrimonio" class="tab-content"><div class="panel-head" style="box-shadow:none;border:0;padding:0 0 14px"><div><h3>Controle de Patrimônio</h3><p>Busque por patrimônio, AF, NF, item, código ou unidade.</p></div><button class="btn-soft" onclick="limparPatrimonio()">Limpar filtros</button></div><div class="pat-alert">Digite um número de patrimônio, AF ou NF para localizar rapidamente o item vinculado.</div><div class="form-grid"><div class="span-4"><label>Busca rápida</label><input id="buscaPat" placeholder="Ex.: patrimônio 14520, AF 1982/2023, NF 1020..." oninput="renderPatrimonio()"></div><div><label>Situação do patrimônio</label><select id="sitPat" onchange="renderPatrimonio()"><option value="">Todas</option><option>PENDENTE</option><option>PARCIAL</option><option>PATRIMONIADO</option></select></div><div><label>Situação NF</label><select id="sitNFPat" onchange="renderPatrimonio()"><option value="">Todas</option><option value="com">Com NF</option><option value="sem">Sem NF</option></select></div><div><label>Resultado</label><input id="contadorPat" readonly></div></div><div class="table-wrap"><table><thead><tr><th>Código</th><th>Item</th><th>Unidade</th><th>AF</th><th>NF</th><th>Qtd.</th><th>Patrimoniados</th><th>Faltam</th><th>Situação</th><th>Números de Patrimônio</th><th>Ações</th></tr></thead><tbody id="tbodyPat"></tbody></table></div></div></div>
+<aside><div class="card summary-box"><h3>Resumo Financeiro da Emenda</h3><p>Valor Total da Emenda <strong id="sTotal"></strong></p><p>Executado com NF <strong id="sNF"></strong></p><p>Saldo Restante <strong id="sSaldo"></strong></p><p>Rendimentos da Conta <strong id="sRend"></strong></p><p>Saldo na Conta Corrente <strong id="sConta"></strong></p><p>Total de Itens <strong id="sItens"></strong></p></div></aside></div></section>
+<section id="globalSection" class="hidden"><div class="panel"><div class="panel-head"><div><h3>Relatórios Gerais</h3><p>Filtros globais de todas as emendas, com busca por AF, NF e patrimônio.</p></div></div><div class="tab-content active"><div class="form-grid"><div><label>Vínculo</label><input id="gVinculo" oninput="renderGlobal()"></div><div><label>Unidade de Saúde</label><input id="gUnidade" oninput="renderGlobal()"></div><div><label>Buscar AF</label><input id="gAF" oninput="renderGlobal()" placeholder="Ex.: 1982/2023"></div><div><label>Buscar NF</label><input id="gNFBusca" oninput="renderGlobal()" placeholder="Ex.: 1020"></div><div><label>Buscar Patrimônio</label><input id="gPat" oninput="renderGlobal()" placeholder="Ex.: 14520"></div><div><label>Situação NF</label><select id="gNF" onchange="renderGlobal()"><option value="">Todas</option><option value="com">Com NF</option><option value="sem">Sem NF</option></select></div></div><div class="table-wrap" style="margin-top:14px"><table><thead><tr><th>Emenda</th><th>Item</th><th>Unidade</th><th>Vínculo</th><th>Qtd.</th><th>Total</th><th>AF</th><th>NF</th><th>Patrimônios</th></tr></thead><tbody id="tbodyGlobal"></tbody></table></div></div></div></section>
+</main></div>
 <script>
-const firebaseConfig = {
-  apiKey: "AIzaSyA55gBMz1lPFDKSnwx1txAY1qyOfedhMS0",
-  authDomain: "sistema-de-emendas.firebaseapp.com",
-  projectId: "sistema-de-emendas",
-  storageBucket: "sistema-de-emendas.firebasestorage.app",
-  messagingSenderId: "278964298113",
-  appId: "1:278964298113:web:ecb77dcf69fe19e26fc880",
-  measurementId: "G-NG4YDWM7M9"
-};
-
-firebase.initializeApp(firebaseConfig);
-const firestoreDB = firebase.firestore();
-const firestoreDocRef = firestoreDB.collection("sistema").doc("emendas");
-</script>
-
-<script>
-const KEY='emendas_campos_completos_v1';let estado={selecionadaId:null,emendas:[]};
-function id(){return crypto.randomUUID?crypto.randomUUID():'id_'+Date.now()+Math.random()}
-function novoItem(){return{id:id(),codigoItem:'',descricao:'',requisicaoNumero:'',requisicaoAno:new Date().getFullYear().toString(),unidadeSaude:'',vinculo:'',quantidade:1,valorUnitario:0,valorItem:0,vinculoContrapartida:'',valorContrapartida:0,autorizacaoFornecimento:'',notaFiscal:'',patrimonios:[],observacoesPatrimonio:''}}
-function novaEstrutura(){return{id:id(),bloco:'',tipo:'',portaria:'',numeroEmenda:'',deputado:'',proposta:'',objeto:'',codigoSmar:'',agencia:'',contaCorrente:'',vinculoEmenda:'',dataDeposito:'',receita:0,rendimentosConta:0,saldoConta:0,valorTotal:0,observacoes:'',itens:[]}}
+const SENHA_ENTRADA='servidor';
+const SENHA_EXCLUSAO='sms';
+const itens=[
+{codigo:'1.23.07.0664-7',desc:'Eletrocardiógrafo',req:'116/2023',unid:'HOSP MUN DE MOGI DAS CRUZES',vinculo:'08.300.5153',qtd:6,unit:3756.66,af:'1982/2023',nf:'1020',pat:['14520','14521','14522','14523','14524','14525']},
+{codigo:'1.23.07.0665-5',desc:'Monitor Multiparâmetros',req:'116/2023',unid:'HOSP MUN DE MOGI DAS CRUZES',vinculo:'08.300.5153',qtd:8,unit:11500,af:'1981/2021',nf:'1021',pat:['15001','15002','15003']},
+{codigo:'1.23.07.0665-5',desc:'Monitor Multiparâmetros',req:'351/2023',unid:'HOSP MUN DE MOGI DAS CRUZES',vinculo:'08.300.5153',qtd:2,unit:15150,af:'1993/2023',nf:'',pat:[]}
+];
+function entrarSistema(){const campo=document.getElementById('senhaEntrada');const erro=document.getElementById('erroLogin');if((campo.value||'').trim()===SENHA_ENTRADA){document.getElementById('loginSistema').style.display='none';erro.classList.remove('active');}else{erro.classList.add('active');campo.value='';campo.focus();}}
+function abrirModalExclusao(){document.getElementById('senhaExclusao').value='';document.getElementById('erroExclusao').classList.remove('active');document.getElementById('modalExcluir').classList.add('active');setTimeout(()=>document.getElementById('senhaExclusao').focus(),50)}
+function fecharModalExclusao(){document.getElementById('modalExcluir').classList.remove('active')}
+function executarExclusao(){const senha=document.getElementById('senhaExclusao').value.trim();if(senha===SENHA_EXCLUSAO){fecharModalExclusao();alert('Emenda excluída com sucesso.');}else{document.getElementById('erroExclusao').classList.add('active');document.getElementById('senhaExclusao').value='';document.getElementById('senhaExclusao').focus();}}
+function n(v){return Number(String(v).replace(/R\$|\./g,'').replace(',','.').replace(/[^0-9.-]/g,''))||0}
 function brl(v){return new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(Number(v||0))}
-function num(v){
- if(typeof v==='number')return v;
- if(!v)return 0;
- let s=String(v).replace(/R\$\s?/g,'').trim().replace(/\s/g,'');
- s=s.replace(/[^0-9,.-]/g,'');
- if(s.includes(',') && s.includes('.')){
-   s=s.replace(/\./g,'').replace(',','.');
- }else if(s.includes(',')){
-   s=s.replace(',','.');
- }else{
-   const partes=s.split('.');
-   if(partes.length>2){
-     const dec=partes.pop();
-     s=partes.join('')+'.'+dec;
-   }
- }
- return Number(s)||0;
-}
-function formatMoneyInput(v){return brl(num(v))}
-function txt(v){return String(v??'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim()}
-function has(v,f){return !txt(f)||txt(v).includes(txt(f))}
-function atual(){return estado.emendas.find(e=>e.id===estado.selecionadaId)||estado.emendas[0]}
-function totalItem(i){i.valorItem=num(i.quantidade)*num(i.valorUnitario);return i.valorItem}
-function valorContrapartidaItem(i){return num(i.valorContrapartida||0)}
-function valorEmendaItem(i){let v=totalItem(i)-valorContrapartidaItem(i);return v<0?0:v}
-function calc(e){let total=num(e.valorTotal),itens=0,nf=0,contrapartida=0,emendaItens=0;e.itens.forEach(i=>{let v=totalItem(i),vc=valorContrapartidaItem(i),ve=valorEmendaItem(i);itens+=v;contrapartida+=vc;emendaItens+=ve;if(String(i.statusItem||'').trim()==='ADQUIRIDO')nf+=ve});return{total,itens,nf,saldo:total-nf,contrapartida,emendaItens,itensNF:e.itens.filter(i=>String(i.statusItem||'').trim()==='ADQUIRIDO').length}}
-async function save(){
-  localStorage.setItem(KEY, JSON.stringify(estado));
-  try{
-    if(typeof firestoreDocRef !== "undefined"){
-      await firestoreDocRef.set({
-        estado: estado,
-        atualizadoEm: new Date().toISOString()
-      });
-    }
-  }catch(erro){
-    console.warn("Não foi possível salvar no Firestore. Salvou localmente.", erro);
-  }
-}
-async function load(){
-  let carregouDoFirestore = false;
-
-  try{
-    if(typeof firestoreDocRef !== "undefined"){
-      const snap = await firestoreDocRef.get();
-      if(snap.exists && snap.data().estado){
-        estado = snap.data().estado;
-        carregouDoFirestore = true;
-        localStorage.setItem(KEY, JSON.stringify(estado));
-      }
-    }
-  }catch(erro){
-    console.warn("Não foi possível carregar do Firestore. Tentando dados locais.", erro);
-  }
-
-  if(!carregouDoFirestore){
-    try{
-      estado = JSON.parse(localStorage.getItem(KEY)) || estado;
-    }catch{}
-  }
-
-  if(!estado.emendas || !estado.emendas.length){
-    let e = novaEstrutura();
-    e.bloco='MAC';
-    e.tipo='Investimento';
-    e.portaria='3995/2024';
-    e.numeroEmenda='37460001';
-    e.deputado='Renata Abreu';
-    e.proposta='12336.008000/1240-02';
-    e.objeto='Aquisição Equipamentos UPA Rodeio e Oropó';
-    e.codigoSmar='715';
-    e.agencia='350-6';
-    e.contaCorrente='071.096-5';
-    e.vinculoEmenda='08.800.3995';
-    e.dataDeposito='2024-10-02';
-    e.receita=302567;
-    e.valorTotal=302567;
-    estado.emendas=[e];
-    estado.selecionadaId=e.id;
-  }
-
-  estado.emendas.forEach(e=>{
-    ['bloco','tipo','deputado','proposta','codigoSmar','agencia','contaCorrente','vinculoEmenda','dataDeposito'].forEach(k=>{
-      if(e[k]===undefined)e[k]='';
-    });
-    ['receita','rendimentosConta','saldoConta'].forEach(k=>{
-      if(e[k]===undefined)e[k]=0;
-    });
-    (e.itens||[]).forEach(i=>{
-      if(i.notaFiscal===undefined)i.notaFiscal='';
-      i.notaFiscal=String(i.notaFiscal||'');
-      if(i.statusItem===undefined)i.statusItem='PENDENTE';if(i.notaFiscal===undefined)i.notaFiscal='';
-      if(i.vinculoContrapartida===undefined)i.vinculoContrapartida='';
-      if(i.valorContrapartida===undefined)i.valorContrapartida=0;if(i.patrimonios===undefined)i.patrimonios=[];if(i.observacoesPatrimonio===undefined)i.observacoesPatrimonio='';
-    });
-  });
-
-  renderAll();
-}
-function renderAll(){renderMetrics();renderHome();if(atual())renderDetail();renderGlobal();save()}
-function renderMetrics(){let t={q:estado.emendas.length,total:0,nf:0,saldo:0};estado.emendas.forEach(e=>{let c=calc(e);t.total+=c.total;t.nf+=c.nf;t.saldo+=c.saldo});set('mQtd',t.q);set('mTotal',brl(t.total));set('mNF',brl(t.nf));set('mSaldo',brl(t.saldo));set('sideQtd',t.q);set('sideTotal',brl(t.total));set('sideNF',brl(t.nf));set('sideSaldo',brl(t.saldo))}
-function renderHome(){let busca=val('busca'),box=document.getElementById('listaEmendas');box.innerHTML='';estado.emendas.filter(e=>has([e.bloco,e.tipo,e.numeroEmenda,e.portaria,e.deputado,e.proposta,e.objeto,e.vinculoEmenda,...e.itens.flatMap(i=>[i.descricao,i.vinculo,i.unidadeSaude,i.notaFiscal])].join(' '),busca)).forEach(e=>{let c=calc(e),div=document.createElement('div');div.className='emenda-row';div.innerHTML=`<div><div class="emenda-title">${esc(e.proposta||e.numeroEmenda||'Sem proposta')}</div><div class="small">Emenda: ${esc(e.numeroEmenda||'-')} • Deputado: ${esc(e.deputado||'-')}</div><div class="small">Portaria: ${esc(e.portaria||'-')} • Vínculo: ${esc(e.vinculoEmenda||'-')}</div><div class="small">Objeto: ${esc(e.objeto||'-')}</div></div><div><div class="small">Valor Total</div><div class="value-blue">${brl(c.total)}</div></div><div><div class="small">Executado com NF</div><div class="value-green">${brl(c.nf)}</div></div><div><div class="small">Saldo Restante</div><div class="value-orange">${brl(c.saldo)}</div></div><div><div class="small">Itens</div><b>${e.itens.length}</b></div><button class="btn-soft">Abrir Painel →</button>`;div.onclick=()=>{estado.selecionadaId=e.id;document.getElementById('detailPanel').classList.add('active');renderDetail();save();window.scrollTo({top:420,behavior:'smooth'})};box.appendChild(div)})}
-function renderDetail(){let e=atual();if(!e)return;let c=calc(e);set('detTitulo','Painel da Emenda');set('detSub',(e.proposta||e.numeroEmenda||'Sem número'));['bloco','tipo','portaria','numeroEmenda','deputado','proposta','codigoSmar','agencia','contaCorrente','vinculoEmenda','dataDeposito','objeto','observacoes'].forEach(k=>{let el=document.getElementById(k);if(el)el.value=e[k]||''});document.getElementById('receita').value=e.receita?brl(e.receita):'';document.getElementById('valorTotal').value=e.valorTotal?brl(e.valorTotal):'';document.getElementById('rendimentosConta').value=e.rendimentosConta?brl(e.rendimentosConta):'';document.getElementById('saldoConta').value=e.saldoConta?brl(e.saldoConta):'';document.getElementById('saldoEmendaAuto').value=brl(c.saldo);document.getElementById('qtdItens').value=e.itens.length;set('sTotal',brl(c.total));set('sNF',brl(c.nf));set('sSaldo',brl(c.saldo));set('sItens',e.itens.length);set('sItensNF',c.itensNF);set('sContra',brl(c.contrapartida));renderItens();renderPatrimonio();gerarRelatorio(false)}
-function renderItens(){let e=atual(),tb=document.getElementById('tbodyItens');tb.innerHTML='';if(!e.itens.length){tb.innerHTML='<tr><td colspan="15" class="empty">Nenhum item cadastrado ainda. Clique em Adicionar Item.</td></tr>';return}e.itens.forEach(i=>{let tr=document.createElement('tr'),total=totalItem(i);tr.innerHTML=`<td>${esc(i.codigoItem)}</td><td>${esc(i.descricao)}</td><td>${esc((i.requisicaoNumero||'')+'/'+(i.requisicaoAno||''))}</td><td>${esc(i.unidadeSaude)}</td><td>${esc(i.vinculo)}</td><td>${esc(i.quantidade)}</td><td>${brl(i.valorUnitario)}</td><td><b>${brl(total)}</b></td><td>${esc(i.vinculoContrapartida||'-')}</td><td>${brl(i.valorContrapartida||0)}</td><td><b>${brl(valorEmendaItem(i))}</b></td><td class="col-af">${esc(i.autorizacaoFornecimento||'-')}</td><td class="col-nf">${esc(String(i.notaFiscal||'-'))}</td><td class="col-status">${((i.statusItem||'PENDENTE')==='ADQUIRIDO')?'<span class="badge ok">ADQUIRIDO</span>':('<span class="badge warn">'+esc(i.statusItem||'PENDENTE')+'</span>')}</td><td><div class="table-actions"><button class="btn-soft" onclick="abrirModalItem('${i.id}');event.stopPropagation()">Editar</button><button class="btn-soft" onclick="abrirModalPatrimonio('${i.id}');event.stopPropagation()">Patrimônio</button><button class="btn-red" onclick="delItem('${i.id}');event.stopPropagation()">Excluir</button></div></td>`;tb.appendChild(tr)})}
-
-function adicionarItem(){abrirModalItem(null)}
-
-function abrirModalItem(itemId){
-  let e=atual(); if(!e)return;
-  let item=itemId?e.itens.find(x=>x.id===itemId):novoItem();
-  document.getElementById('modalItemId').value=itemId||'';
-  document.getElementById('modalTitulo').textContent=itemId?'Editar Item':'Cadastrar Novo Item';
-  document.getElementById('mCodigoItem').value=item.codigoItem||'';
-  document.getElementById('mDescricao').value=item.descricao||'';
-  document.getElementById('mReqNumero').value=item.requisicaoNumero||'';
-  document.getElementById('mReqAno').value=item.requisicaoAno||new Date().getFullYear();
-  document.getElementById('mUnidadeSaude').value=item.unidadeSaude||'';
-  document.getElementById('mVinculo').value=item.vinculo||'';
-  document.getElementById('mQuantidade').value=item.quantidade||1;
-  document.getElementById('mValorUnitario').value=brl(item.valorUnitario||0);
-  document.getElementById('mVinculoContrapartida').value=item.vinculoContrapartida||'';
-  document.getElementById('mValorContrapartida').value=brl(item.valorContrapartida||0);
-  document.getElementById('mAF').value=item.autorizacaoFornecimento||'';
-  document.getElementById('mNotaFiscal').value=String(item.notaFiscal||'');
-  atualizarPreviewModal(false);
-  resetarPosicaoModal();document.getElementById('itemModal').classList.add('active');
-}
-function fecharModalItem(){document.getElementById('itemModal').classList.remove('active')}
-function atualizarPreviewModal(autoStatus=false){
-  let qtd=num(document.getElementById('mQuantidade').value);
-  let unit=num(document.getElementById('mValorUnitario').value);
-  let contra=num(document.getElementById('mValorContrapartida').value);
-  let total=qtd*unit;
-  let emenda=total-contra;if(emenda<0)emenda=0;
-  document.getElementById('mValorTotal').value=brl(total);
-  document.getElementById('mValorEmenda').value=brl(emenda);
-  const nfCampoPreview=document.getElementById('mNotaFiscal');
-const nf=(nfCampoPreview?nfCampoPreview.value:'').trim();
-if(autoStatus){document.getElementById('mStatus').value=nf.length>0?'ADQUIRIDO':'PENDENTE';}
-}
-['mQuantidade','mNotaFiscal','mValorUnitario','mValorContrapartida'].forEach(idc=>
-setTimeout(()=>{
-  let el=document.getElementById(idc);
-  if(el){
-    el.addEventListener('input',atualizarPreviewModal);
-    el.addEventListener('keyup',atualizarPreviewModal);
-    el.addEventListener('change',atualizarPreviewModal);
-  }
-},0));
-function salvarItemModal(){
-  const e = atual();
-  if(!e) return;
-
-  const itemId = String(document.getElementById('modalItemId').value || '').trim();
-  let item = itemId ? e.itens.find(x => String(x.id) === itemId) : null;
-
-  if(!item){
-    item = novoItem();
-  }
-
-  item.codigoItem = String(document.getElementById('mCodigoItem').value || '').trim();
-  item.descricao = String(document.getElementById('mDescricao').value || '').trim();
-  item.requisicaoNumero = String(document.getElementById('mReqNumero').value || '').trim();
-  item.requisicaoAno = String(document.getElementById('mReqAno').value || '').trim();
-  item.unidadeSaude = String(document.getElementById('mUnidadeSaude').value || '').trim();
-  item.vinculo = String(document.getElementById('mVinculo').value || '').trim();
-  item.quantidade = num(document.getElementById('mQuantidade').value);
-  item.valorUnitario = num(document.getElementById('mValorUnitario').value);
-  item.vinculoContrapartida = String(document.getElementById('mVinculoContrapartida').value || '').trim();
-  item.valorContrapartida = num(document.getElementById('mValorContrapartida').value);
-  item.autorizacaoFornecimento = String(document.getElementById('mAF').value || '').trim();
-  item.notaFiscal = String(document.getElementById('mNotaFiscal').value || '').trim();
-  item.statusItem = document.getElementById('mStatus') ? document.getElementById('mStatus').value : (item.statusItem || 'PENDENTE');
-  item.valorItem = totalItem(item);
-
-  const idx = e.itens.findIndex(x => String(x.id) === String(item.id));
-  if(idx >= 0){
-    e.itens.splice(idx, 1, item);
-  }else{
-    e.itens.push(item);
-  }
-
-  estado.selecionadaId = e.id;
-  localStorage.setItem(KEY, JSON.stringify(estado));
-
-  fecharModalItem();
-  openTab('itens', document.querySelectorAll('.tab')[1]);
-  renderAll();
-}
-
-
-function patrimonioLista(i){
-  if(Array.isArray(i.patrimonios)) return i.patrimonios.filter(x=>String(x||'').trim());
-  if(typeof i.patrimonios==='string') return i.patrimonios.split(/[\n,;]+/).map(x=>x.trim()).filter(Boolean);
-  return [];
-}
-function qtdPatrimoniada(i){return patrimonioLista(i).length}
-function situacaoPatrimonio(i){
-  const qtd=num(i.quantidade);
-  const pat=qtdPatrimoniada(i);
-  if(pat<=0)return 'PENDENTE';
-  if(pat<qtd)return 'PARCIAL';
-  return 'PATRIMONIADO';
-}
-function faltamPatrimoniar(i){
-  const falta=num(i.quantidade)-qtdPatrimoniada(i);
-  return falta<0?0:falta;
-}
-function renderPatrimonio(){
-  const e=atual();
-  const tb=document.getElementById('tbodyPatrimonio');
-  if(!e||!tb)return;
-  const itens=e.itens.filter(i=>(i.statusItem||'PENDENTE')==='ADQUIRIDO' || String(i.notaFiscal||'').trim() || String(i.autorizacaoFornecimento||'').trim());
-  if(!itens.length){
-    tb.innerHTML='<tr><td colspan="11" class="empty">Nenhum item adquirido ou com AF/NF para controle de patrimônio.</td></tr>';
-    return;
-  }
-  tb.innerHTML=itens.map(i=>{
-    const pats=patrimonioLista(i);
-    const sit=situacaoPatrimonio(i);
-    const badge=sit==='PATRIMONIADO'?'ok':'warn';
-    return `<tr>
-      <td>${esc(i.codigoItem||'-')}</td>
-      <td>${esc(i.descricao||'-')}</td>
-      <td>${esc(i.unidadeSaude||'-')}</td>
-      <td class="col-af">${esc(i.autorizacaoFornecimento||'-')}</td>
-      <td class="col-nf">${esc(i.notaFiscal||'-')}</td>
-      <td>${esc(i.quantidade||0)}</td>
-      <td><b>${qtdPatrimoniada(i)}</b></td>
-      <td><b>${faltamPatrimoniar(i)}</b></td>
-      <td><span class="badge ${badge}">${sit}</span></td>
-      <td><div class="pat-list">${pats.length?pats.map(p=>`<span class="pat-chip">${esc(p)}</span>`).join(''):'-'}</div></td>
-      <td><button class="btn-soft" onclick="abrirModalPatrimonio('${i.id}')">Cadastrar</button></td>
-    </tr>`;
-  }).join('');
-}
-function abrirModalPatrimonio(itemId){
-  const e=atual(); if(!e)return;
-  const i=e.itens.find(x=>String(x.id)===String(itemId));
-  if(!i)return;
-  document.getElementById('patItemId').value=i.id;
-  document.getElementById('patItemDescricao').value=i.descricao||'';
-  document.getElementById('patAF').value=i.autorizacaoFornecimento||'';
-  document.getElementById('patNF').value=i.notaFiscal||'';
-  document.getElementById('patUnidade').value=i.unidadeSaude||'';
-  document.getElementById('patQtdComprada').value=i.quantidade||0;
-  document.getElementById('patNumeros').value=patrimonioLista(i).join('\n');
-  document.getElementById('patObservacoes').value=i.observacoesPatrimonio||'';
-  document.getElementById('patQtdPatrimoniada').value=qtdPatrimoniada(i);
-  document.getElementById('patrimonioModal').classList.add('active');
-}
-function fecharModalPatrimonio(){document.getElementById('patrimonioModal').classList.remove('active')}
-async function salvarPatrimonio(){
-  const e=atual(); if(!e)return;
-  const id=document.getElementById('patItemId').value;
-  const i=e.itens.find(x=>String(x.id)===String(id));
-  if(!i)return;
-  i.patrimonios=String(document.getElementById('patNumeros').value||'').split(/[\n,;]+/).map(x=>x.trim()).filter(Boolean);
-  i.observacoesPatrimonio=String(document.getElementById('patObservacoes').value||'').trim();
-  fecharModalPatrimonio();
-  await save();
-  renderDetail();
-  openTab('patrimonio',document.querySelectorAll('.tab')[3]);
-}
-
-function updItem(id,c,v){let i=atual().itens.find(x=>x.id===id);if(i){i[c]=v;renderAll()}}
-function updQtd(id,v){let i=atual().itens.find(x=>x.id===id);if(i){i.quantidade=num(v);renderAll()}}
-function updUnit(id,v){let i=atual().itens.find(x=>x.id===id);if(i){i.valorUnitario=num(v);renderAll()}}
-function updContra(id,v){let i=atual().itens.find(x=>x.id===id);if(i){i.valorContrapartida=num(v);renderAll()}}
-function delItem(id){atual().itens=atual().itens.filter(i=>i.id!==id);renderAll()}
-function updateEmenda(c,v){atual()[c]=v;renderMetrics();renderHome();save()}
-function updateMoney(c,v){atual()[c]=num(v);if(c==='receita'&&!atual().valorTotal){atual().valorTotal=atual().receita;document.getElementById('valorTotal').value=brl(atual().valorTotal)}renderMetrics();renderHome();save()}
-function updateEmendaValor(v){atual().valorTotal=num(v);renderMetrics();renderHome();document.getElementById('saldoEmendaAuto').value=brl(calc(atual()).saldo);save()}
-function novaEmenda(){let e=novaEstrutura();estado.emendas.unshift(e);estado.selecionadaId=e.id;document.getElementById('detailPanel').classList.add('active');renderAll();openTab('dados',document.querySelector('.tab'))}
-function excluirEmenda(){if(!confirm('Excluir esta emenda?'))return;estado.emendas=estado.emendas.filter(e=>e.id!==estado.selecionadaId);if(!estado.emendas.length)novaEmenda();else{estado.selecionadaId=estado.emendas[0].id;renderAll()}}
-function openTab(name,btn){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));if(btn)btn.classList.add('active');document.getElementById('tab-'+name).classList.add('active')}
-function showSection(s,btn){document.getElementById('homeSection').classList.toggle('hidden',s!=='home');document.getElementById('globalSection').classList.toggle('hidden',s!=='global');document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active')}
-function abrirRelatorio(){gerarRelatorio(false);openTab('relatorio',document.querySelectorAll('.tab')[2]);setTimeout(()=>document.getElementById('relatorio').scrollIntoView({behavior:'smooth',block:'start'}),100)}
-function imprimirRelatorio(){gerarRelatorio(false);openTab('relatorio',document.querySelectorAll('.tab')[2]);setTimeout(()=>window.print(),200)}
-function gerarRelatorio(open=true){
-let e=atual(),c=calc(e),gr={};
-
-e.itens.forEach(i=>{
-  let k=(i.requisicaoNumero||'Sem nº')+'/'+(i.requisicaoAno||'Sem ano');
-  if(!gr[k])gr[k]={itens:[],total:0,nf:0,semnf:0,v:new Set()};
-  let vt=totalItem(i);
-  gr[k].itens.push(i);
-  gr[k].total+=vt;
-  if(String(i.statusItem||'').trim()==='ADQUIRIDO')gr[k].nf+=valorEmendaItem(i);else gr[k].semnf+=valorEmendaItem(i);
-  if(i.vinculo)gr[k].v.add(i.vinculo);
-});
-
-let blocos=Object.entries(gr).map(([k,g])=>`
-<div class="req-block">
-  <div class="req-head">
-    <div><span>Requisição de Compra</span><b>${esc(k)}</b></div>
-    <div><span>Vínculo utilizado</span><b>${esc([...g.v].join(', ')||e.vinculoEmenda||'-')}</b></div>
-    <div><span>Total da requisição</span><b>${brl(g.total)}</b></div>
-    <div><span>Total com NF</span><b>${brl(g.nf)}</b></div>
-  </div>
-  <div class="req-head" style="background:#fff">
-    <div><span>Quantidade de itens</span><b>${g.itens.length}</b></div>
-    <div><span>Total sem NF</span><b>${brl(g.semnf)}</b></div>
-    <div><span>Impacto no saldo</span><b>${brl(g.nf)}</b></div>
-    <div><span>Situação</span><b>${g.semnf>0?'Possui item sem NF':'Todos com NF'}</b></div>
-  </div>
-  <div class="table-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th>Código</th>
-          <th>Item</th>
-          <th>Unidade de Saúde</th>
-          <th>Qtd.</th>
-          <th>Valor Unit.</th>
-          <th>Valor Total</th>
-          <th>Vínculo Contrapartida</th>
-          <th>Valor Contrapartida</th>
-          <th>Valor da Emenda</th>
-          <th>AF</th>
-          <th>NF</th>
-          <th>Vínculo</th>
-          <th>ADQUIRIDO</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${g.itens.map(i=>{
-          let temNF=String(i.statusItem||'').trim()==='ADQUIRIDO';
-          return `<tr>
-            <td>${esc(i.codigoItem)}</td>
-            <td>${esc(i.descricao)}</td>
-            <td>${esc(i.unidadeSaude)}</td>
-            <td>${esc(i.quantidade)}</td>
-            <td>${brl(i.valorUnitario)}</td>
-            <td>${brl(totalItem(i))}</td>
-            <td>${esc(i.vinculoContrapartida||'-')}</td>
-            <td>${brl(valorContrapartidaItem(i))}</td>
-            <td>${brl(valorEmendaItem(i))}</td>
-            <td>${esc(i.autorizacaoFornecimento||'-')}</td>
-            <td>${esc(i.notaFiscal||'Sem NF')}</td>
-            <td>${esc(i.vinculo||e.vinculoEmenda||'-')}</td>
-            <td>${temNF?'ADQUIRIDO':'PENDENTE'}</td>
-          </tr>`
-        }).join('')}
-      </tbody>
-    </table>
-  </div>
-</div>`).join('');
-
-document.getElementById('relatorio').innerHTML=`
-<div class="report-doc">
-  <div class="report-head">
-    <h2>Relatório Situacional da Emenda Parlamentar</h2>
-    <p>Sistema Controle de Emendas — acompanhamento da proposta, execução, compras, notas fiscais, vínculo e saldos.</p>
-  </div>
-
-  <div class="report-section-title">I - Dados da Proposta</div>
-  <div class="report-info-grid">
-    <div><span>Bloco</span><b>${esc(e.bloco||'-')}</b></div>
-    <div><span>Tipo</span><b>${esc(e.tipo||'-')}</b></div>
-    <div><span>Portaria</span><b>${esc(e.portaria||'-')}</b></div>
-    <div><span>Emenda</span><b>${esc(e.numeroEmenda||'-')}</b></div>
-    <div><span>Deputado</span><b>${esc(e.deputado||'-')}</b></div>
-    <div><span>Proposta</span><b>${esc(e.proposta||'-')}</b></div>
-    <div><span>Código SMAR</span><b>${esc(e.codigoSmar||'-')}</b></div>
-    <div><span>Vínculo da Emenda</span><b>${esc(e.vinculoEmenda||'-')}</b></div>
-    <div><span>Data do Depósito</span><b>${esc(e.dataDeposito||'-')}</b></div>
-  </div>
-
-  <div class="report-section-title">II - Dados Bancários e Financeiros</div>
-  <div class="report-finance-grid">
-    <div><span>Agência</span><b>${esc(e.agencia||'-')}</b></div>
-    <div><span>Conta Corrente</span><b>${esc(e.contaCorrente||'-')}</b></div>
-    <div><span>Receita</span><b>${brl(e.receita)}</b></div>
-    <div><span>Valor Total da Emenda</span><b>${brl(c.total)}</b></div>
-    <div><span>Executado com NF - Recurso da Emenda</span><b>${brl(c.nf)}</b></div>
-    <div><span>Contrapartida Inserida</span><b>${brl(c.contrapartida)}</b></div>
-    <div><span>Saldo da Emenda</span><b>${brl(c.saldo)}</b></div>
-    <div><span>Rendimentos da Conta Corrente</span><b>${brl(e.rendimentosConta)}</b></div>
-    <div><span>Saldo na Conta Corrente</span><b>${brl(e.saldoConta)}</b></div>
-  </div>
-
-  <div class="report-section-title">III - Identificação do Objeto</div>
-  <div class="report-object">${esc(e.objeto||'Não informado')}</div>
-
-  <div class="report-section-title">IV - Observações / Dados da Compra</div>
-  <div class="report-object">${esc(e.observacoes||'Sem observações registradas.')}</div>
-
-  <div class="report-section-title">V - Execução Físico-Financeira</div>
-  <p><b>Critério de cálculo:</b> o saldo da emenda é abatido somente pelos itens que possuem Nota Fiscal registrada.</p>
-  ${blocos||'<div class="empty">Nenhum item cadastrado.</div>'}
-
-  <div class="report-section-title">VI - Controle de Patrimônio</div>
-  <div class="table-wrap">
-    <table>
-      <thead><tr><th>Item</th><th>Unidade</th><th>AF</th><th>NF</th><th>Qtd.</th><th>Patrimoniados</th><th>Faltam</th><th>Situação</th><th>Números de Patrimônio</th></tr></thead>
-      <tbody>
-        ${e.itens.map(i=>`<tr><td>${esc(i.descricao||'-')}</td><td>${esc(i.unidadeSaude||'-')}</td><td>${esc(i.autorizacaoFornecimento||'-')}</td><td>${esc(i.notaFiscal||'-')}</td><td>${esc(i.quantidade||0)}</td><td>${qtdPatrimoniada(i)}</td><td>${faltamPatrimoniar(i)}</td><td>${situacaoPatrimonio(i)}</td><td>${esc(patrimonioLista(i).join(', ')||'-')}</td></tr>`).join('')}
-      </tbody>
-    </table>
-  </div>
-
-</div>`;
-
-if(open)openTab('relatorio',document.querySelectorAll('.tab')[2])
-}
-function todasCompras(){let a=[];estado.emendas.forEach(e=>e.itens.forEach(i=>a.push({e,i})));return a}
-function renderGlobal(){let tb=document.getElementById('tbodyGlobal');if(!tb)return;let rows=todasCompras().filter(({e,i})=>{let pats=patrimonioLista(i).join(' ');return has(i.vinculo,val('gVinculo'))&&has(i.unidadeSaude,val('gUnidade'))&&has(e.numeroEmenda+' '+e.portaria+' '+(e.proposta||'')+' '+(e.deputado||''),val('gEmenda'))&&has((e.objeto||'')+' '+(i.descricao||'')+' '+(i.codigoItem||'')+' '+(e.bloco||'')+' '+(e.tipo||''),val('gObjeto'))&&has(i.autorizacaoFornecimento||'',val('gAF'))&&has(i.notaFiscal||'',val('gBuscaNF'))&&has(pats,val('gPatrimonio'))&&(!val('gNF')||(val('gNF')==='com'?!!String(i.notaFiscal||'').trim():!String(i.notaFiscal||'').trim()))});tb.innerHTML=rows.map(({e,i})=>{let pats=patrimonioLista(i);return `<tr><td>${esc(e.proposta||e.numeroEmenda)}</td><td>${esc(e.portaria)}</td><td>${esc(i.descricao)}</td><td>${esc(i.unidadeSaude)}</td><td>${esc(i.vinculo||e.vinculoEmenda)}</td><td>${esc(i.quantidade)}</td><td>${brl(i.valorUnitario)}</td><td>${brl(totalItem(i))}</td><td>${brl(valorContrapartidaItem(i))}</td><td>${brl(valorEmendaItem(i))}</td><td class="col-af">${esc(i.autorizacaoFornecimento||'-')}</td><td class="col-nf">${esc(String(i.notaFiscal||'-'))}</td><td>${pats.length?pats.map(p=>`<span class="pat-chip">${esc(p)}</span>`).join(''):'-'}</td></tr>`}).join('')||'<tr><td colspan="13" class="empty">Nenhum resultado.</td></tr>'}
-function exportarCSV(rows,nome){let csv=[['Bloco','Tipo','Portaria','Emenda','Deputado','Proposta','Objeto','Codigo SMAR','Agencia','Conta Corrente','Vinculo Emenda','Data Deposito','Receita','Saldo Emenda','Rendimentos Conta','Saldo Conta','Codigo Item','Item','Unidade','Vinculo Item','Qtd','Valor Unitario','Valor Total','Vinculo Contrapartida','Valor Contrapartida','Valor da Emenda','AF','NF','Patrimônios','Situação Patrimônio','Qtd. Patrimoniada','Faltam Patrimoniar']];rows.forEach(({e,i})=>csv.push([e.bloco,e.tipo,e.portaria,e.numeroEmenda,e.deputado,e.proposta,e.objeto,e.codigoSmar,e.agencia,e.contaCorrente,e.vinculoEmenda,e.dataDeposito,num(e.receita).toFixed(2),calc(e).saldo.toFixed(2),num(e.rendimentosConta).toFixed(2),num(e.saldoConta).toFixed(2),i.codigoItem,i.descricao,i.unidadeSaude,i.vinculo,i.quantidade,num(i.valorUnitario).toFixed(2),totalItem(i).toFixed(2),i.vinculoContrapartida,valorContrapartidaItem(i).toFixed(2),valorEmendaItem(i).toFixed(2),i.autorizacaoFornecimento,i.notaFiscal,patrimonioLista(i).join(', '),situacaoPatrimonio(i),qtdPatrimoniada(i),faltamPatrimoniar(i)]));download(new Blob(['\ufeff'+csv.map(r=>r.map(c=>`"${String(c??'').replace(/"/g,'""')}"`).join(';')).join('\n')],{type:'text/csv'}),nome)}
-function salvarBackup(){download(new Blob([JSON.stringify(estado,null,2)],{type:'application/json'}),'backup_emendas.json')}
-function importarBackup(ev){let f=ev.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{estado=JSON.parse(r.result);renderAll()}catch{alert('Arquivo inválido')}};r.readAsText(f)}
-function download(blob,nome){let u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=nome;a.click();URL.revokeObjectURL(u)}
-function set(id,v){let e=document.getElementById(id);if(e)e.textContent=v}
-function val(id){let e=document.getElementById(id);return e?e.value:''}
-function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
-
-let modalDragging=false, modalStartX=0, modalStartY=0, modalOrigX=0, modalOrigY=0;
-
-function habilitarArrasteModal(){
-  const box=document.getElementById('itemModalBox');
-  const header=document.getElementById('itemModalHeader');
-  if(!box||!header||header.dataset.dragReady)return;
-  header.dataset.dragReady='1';
-
-  header.addEventListener('mousedown', iniciarArrasteModal);
-  header.addEventListener('touchstart', iniciarArrasteModalTouch, {passive:false});
-}
-
-function iniciarArrasteModal(e){
-  if(e.target.tagName==='BUTTON')return;
-  const box=document.getElementById('itemModalBox');
-  modalDragging=true;
-  modalStartX=e.clientX;
-  modalStartY=e.clientY;
-  const rect=box.getBoundingClientRect();
-  modalOrigX=rect.left;
-  modalOrigY=rect.top;
-  box.style.position='fixed';
-  box.style.left=modalOrigX+'px';
-  box.style.top=modalOrigY+'px';
-  box.style.margin='0';
-  document.addEventListener('mousemove', arrastarModal);
-  document.addEventListener('mouseup', pararArrasteModal);
-}
-
-function iniciarArrasteModalTouch(e){
-  if(e.target.tagName==='BUTTON')return;
-  e.preventDefault();
-  const t=e.touches[0];
-  iniciarArrasteModal({clientX:t.clientX, clientY:t.clientY, target:e.target});
-  document.addEventListener('touchmove', arrastarModalTouch, {passive:false});
-  document.addEventListener('touchend', pararArrasteModalTouch);
-}
-
-function arrastarModal(e){
-  if(!modalDragging)return;
-  const box=document.getElementById('itemModalBox');
-  const dx=e.clientX-modalStartX;
-  const dy=e.clientY-modalStartY;
-  let left=modalOrigX+dx;
-  let top=modalOrigY+dy;
-  const maxLeft=window.innerWidth-box.offsetWidth-10;
-  const maxTop=window.innerHeight-60;
-  left=Math.max(10,Math.min(left,maxLeft));
-  top=Math.max(10,Math.min(top,maxTop));
-  box.style.left=left+'px';
-  box.style.top=top+'px';
-}
-
-function arrastarModalTouch(e){
-  if(!modalDragging)return;
-  e.preventDefault();
-  const t=e.touches[0];
-  arrastarModal({clientX:t.clientX, clientY:t.clientY});
-}
-
-function pararArrasteModal(){
-  modalDragging=false;
-  document.removeEventListener('mousemove', arrastarModal);
-  document.removeEventListener('mouseup', pararArrasteModal);
-}
-
-function pararArrasteModalTouch(){
-  modalDragging=false;
-  document.removeEventListener('touchmove', arrastarModalTouch);
-  document.removeEventListener('touchend', pararArrasteModalTouch);
-}
-
-function resetarPosicaoModal(){
-  const box=document.getElementById('itemModalBox');
-  if(!box)return;
-  box.style.position='relative';
-  box.style.left='';
-  box.style.top='';
-  box.style.margin='';
-}
-
-habilitarArrasteModal();
-load();
-</script></body></html>
+function t(v){return String(v||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'')}
+function ok(v,f){return !t(f)||t(v).includes(t(f))}
+function situacao(i){const p=i.pat.length;if(p<=0)return 'PENDENTE';if(p<i.qtd)return 'PARCIAL';return 'PATRIMONIADO'}
+function setText(id,v){const el=document.getElementById(id);if(el)el.textContent=v}
+function openTab(name,btn){document.querySelectorAll('#homeSection .tab').forEach(x=>x.classList.remove('active'));document.querySelectorAll('#homeSection .tab-content').forEach(x=>x.classList.remove('active'));btn.classList.add('active');document.getElementById('tab-'+name).classList.add('active')}
+function showSection(s,btn){document.getElementById('homeSection').classList.toggle('hidden',s!=='home');document.getElementById('globalSection').classList.toggle('hidden',s!=='global');document.getElementById('tituloPagina').textContent=s==='global'?'Relatórios Gerais':'Painel Principal';document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');if(s==='global')renderGlobal();}
+function recalcularDados(){const total=n(document.getElementById('valorTotal').value),nf=n(document.getElementById('executadoNF').value),rend=n(document.getElementById('rendimentos').value),saldo=total-nf,conta=saldo+rend,qtd=itens.reduce((s,i)=>s+i.qtd,0);document.getElementById('saldoEmenda').value=brl(saldo);document.getElementById('saldoConta').value=brl(conta);document.getElementById('qtdItens').value=qtd;setText('sTotal',brl(total));setText('sNF',brl(nf));setText('sSaldo',brl(saldo));setText('sRend',brl(rend));setText('sConta',brl(conta));setText('sItens',qtd);setText('mQtd','2');setText('mTotal','R$ 702.303,00');setText('mNF','R$ 248.016,66');setText('mSaldo','R$ 454.286,34');setText('sideQtd','2');setText('sideTotal','R$ 702.303,00');setText('sideNF','R$ 248.016,66');setText('sideSaldo','R$ 454.286,34')}
+function renderListaEmendas(){const c=n(document.getElementById('valorTotal').value),nf=n(document.getElementById('executadoNF').value),saldo=c-nf,qtd=itens.reduce((s,i)=>s+i.qtd,0);document.getElementById('listaEmendas').innerHTML=`<div class="emenda-row"><div><div class="emenda-title">12336.008000/1220-04</div><div class="small">Emenda: 41350004 • Deputado: Vinicius Poit</div><div class="small">Portaria: 1153/2022 • Vínculo: 08.300.5153</div><div class="small">Objeto: Recurso de Emenda Parlamentar</div></div><div><div class="small">Valor Total</div><div class="value-blue">${brl(c)}</div></div><div><div class="small">Executado com NF</div><div class="value-green">${brl(nf)}</div></div><div><div class="small">Saldo Restante</div><div class="value-orange">${brl(saldo)}</div></div><div><div class="small">Qtd.</div><b>${qtd}</b></div><button class="btn-soft" onclick="document.querySelector('.right-grid').scrollIntoView({behavior:'smooth'})">Abrir Painel →</button></div>`}
+function renderItens(){document.getElementById('tbodyItens').innerHTML=itens.map(i=>`<tr><td>${i.codigo}</td><td>${i.desc}</td><td>${i.req}</td><td>${i.unid}</td><td>${i.vinculo}</td><td><b>${i.qtd}</b></td><td>${brl(i.unit)}</td><td><b>${brl(i.qtd*i.unit)}</b></td><td>${i.af}</td><td>${i.nf||'-'}</td><td>${i.pat.map(p=>`<span class="pat-chip">${p}</span>`).join('')||'-'}</td></tr>`).join('')}
+function renderPatrimonio(){let busca=document.getElementById('buscaPat').value,sit=document.getElementById('sitPat').value,nf=document.getElementById('sitNFPat').value;let rows=itens.filter(i=>ok([i.codigo,i.desc,i.unid,i.af,i.nf,i.pat.join(' ')].join(' '),busca)&&(!sit||situacao(i)===sit)&&(!nf||(nf==='com'?!!i.nf:!i.nf)));document.getElementById('contadorPat').value=rows.length+' item(ns) encontrado(s)';document.getElementById('tbodyPat').innerHTML=rows.map(i=>`<tr><td>${i.codigo}</td><td>${i.desc}</td><td>${i.unid}</td><td><b>${i.af}</b></td><td>${i.nf||'-'}</td><td>${i.qtd}</td><td><b>${i.pat.length}</b></td><td><b>${Math.max(0,i.qtd-i.pat.length)}</b></td><td><span class="badge ${situacao(i)==='PATRIMONIADO'?'ok':'warn'}">${situacao(i)}</span></td><td>${i.pat.map(p=>`<span class="pat-chip">${p}</span>`).join('')||'-'}</td><td><button class="btn-soft">Cadastrar</button></td></tr>`).join('')||'<tr><td colspan="11" class="empty">Nenhum item encontrado.</td></tr>'}
+function limparPatrimonio(){document.getElementById('buscaPat').value='';document.getElementById('sitPat').value='';document.getElementById('sitNFPat').value='';renderPatrimonio()}
+function renderGlobal(){let rows=itens.filter(i=>ok(i.vinculo,document.getElementById('gVinculo').value)&&ok(i.unid,document.getElementById('gUnidade').value)&&ok(i.af,document.getElementById('gAF').value)&&ok(i.nf,document.getElementById('gNFBusca').value)&&ok(i.pat.join(' '),document.getElementById('gPat').value)&&(!document.getElementById('gNF').value||(document.getElementById('gNF').value==='com'?!!i.nf:!i.nf)));document.getElementById('tbodyGlobal').innerHTML=rows.map(i=>`<tr><td>12336.008000/1220-04</td><td>${i.desc}</td><td>${i.unid}</td><td>${i.vinculo}</td><td>${i.qtd}</td><td>${brl(i.qtd*i.unit)}</td><td>${i.af}</td><td>${i.nf||'-'}</td><td>${i.pat.map(p=>`<span class="pat-chip">${p}</span>`).join('')||'-'}</td></tr>`).join('')||'<tr><td colspan="9" class="empty">Nenhum resultado.</td></tr>'}
+renderListaEmendas();renderItens();renderPatrimonio();renderGlobal();recalcularDados();
+</script>
+</body>
+</html>
